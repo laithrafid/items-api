@@ -1,5 +1,6 @@
 package items
 
+//1
 type Item struct {
 	Id                string      `json:"id"`
 	Seller            int64       `json:"seller"`

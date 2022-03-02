@@ -13,7 +13,7 @@ import (
 	"github.com/laithrafid/bookstore_items-api/src/services"
 	"github.com/laithrafid/bookstore_items-api/src/utils/errors_utils"
 	"github.com/laithrafid/bookstore_items-api/src/utils/http_utils"
-	oauth "github.com/laithrafid/bookstore_items-api/src/utils/oauth_utils"
+	"github.com/laithrafid/bookstore_items-api/src/utils/oauth_utils"
 )
 
 var (
@@ -29,8 +29,9 @@ type itemsControllerInterface interface {
 type itemsController struct {
 }
 
+//8
 func (cont *itemsController) Create(w http.ResponseWriter, r *http.Request) {
-	if err := oauth.AuthenticateRequest(r); err != nil {
+	if err := oauth_utils.AuthenticateRequest(r); err != nil {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(err.Status())
 		if a := json.NewEncoder(w).Encode(err); a != nil {
@@ -38,7 +39,7 @@ func (cont *itemsController) Create(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	sellerId := oauth.GetCallerId(r)
+	sellerId := oauth_utils.GetCallerId(r)
 	if sellerId == 0 {
 		respErr := errors_utils.NewUnauthorizedError("invalid access token")
 		http_utils.RespondError(w, respErr)
@@ -70,6 +71,7 @@ func (cont *itemsController) Create(w http.ResponseWriter, r *http.Request) {
 	http_utils.RespondJson(w, http.StatusCreated, result)
 }
 
+//9
 func (cont *itemsController) Get(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	itemId := strings.TrimSpace(vars["id"])
