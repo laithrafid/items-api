@@ -1,5 +1,5 @@
 # Sttart from base image 1.12.13:
-FROM golang:1.12.13
+FROM golang:1.17
 
 ENV ELASTIC_HOSTS=localhost:9200
 ENV LOG_LEVEL=info
