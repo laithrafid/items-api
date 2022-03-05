@@ -17,6 +17,7 @@ var (
 
 func StartApplication() {
 	elasticsearch.Init()
+
 	config, err := config_utils.LoadConfig(".")
 	if err != nil {
 		logger_utils.Error("cannot load config of application:", err)

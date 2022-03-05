@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/laithrafid/bookstore_items-api/src/utils/config_utils"
+	"github.com/laithrafid/bookstore_items-api/src/utils/errors_utils"
 	"github.com/laithrafid/bookstore_items-api/src/utils/logger_utils"
 	"github.com/olivere/elastic"
 )
@@ -39,7 +40,7 @@ func Init() {
 		elastic.SetInfoLog(log),
 	)
 	if err != nil {
-		panic(err)
+		errors_utils.NewInternalServerError("Error connection to DB Cluster", err)
 	}
 	Client.setClient(client)
 
