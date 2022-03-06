@@ -56,6 +56,8 @@ func getLevel() zapcore.Level {
 		return zap.InfoLevel
 	case "error":
 		return zap.ErrorLevel
+	case "warn":
+		return zap.WarnLevel
 	default:
 		return zap.InfoLevel
 	}
