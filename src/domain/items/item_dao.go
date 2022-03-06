@@ -8,7 +8,7 @@ import (
 
 	"github.com/laithrafid/bookstore_items-api/src/clients/elasticsearch"
 	"github.com/laithrafid/bookstore_items-api/src/domain/queries"
-	"github.com/laithrafid/bookstore_items-api/src/utils/errors_utils"
+	"github.com/laithrafid/bookstore_utils-go/errors_utils"
 )
 
 const (

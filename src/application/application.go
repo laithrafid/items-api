@@ -7,8 +7,8 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/laithrafid/bookstore_items-api/src/clients/elasticsearch"
 
-	"github.com/laithrafid/bookstore_items-api/src/utils/config_utils"
-	"github.com/laithrafid/bookstore_items-api/src/utils/logger_utils"
+	"github.com/laithrafid/bookstore_utils-go/config_utils"
+	"github.com/laithrafid/bookstore_utils-go/logger_utils"
 )
 
 var (

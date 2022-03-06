@@ -11,9 +11,9 @@ import (
 	"github.com/laithrafid/bookstore_items-api/src/domain/items"
 	"github.com/laithrafid/bookstore_items-api/src/domain/queries"
 	"github.com/laithrafid/bookstore_items-api/src/services"
-	"github.com/laithrafid/bookstore_items-api/src/utils/errors_utils"
-	"github.com/laithrafid/bookstore_items-api/src/utils/http_utils"
-	"github.com/laithrafid/bookstore_items-api/src/utils/oauth_utils"
+	"github.com/laithrafid/bookstore_utils-go/errors_utils"
+	"github.com/laithrafid/bookstore_utils-go/http_utils"
+	"github.com/laithrafid/bookstore_utils-go/oauth_utils"
 )
 
 var (
