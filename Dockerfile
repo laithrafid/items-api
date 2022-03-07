@@ -1,27 +1,32 @@
-# Sttart from base image 1.12.13:
-FROM golang:1.17
+# Dockerfile.deploy
+FROM golang:1.17.6 as Builder
+LABEL bayt.cloud.image.authors="laith@bayt.cloud"
+ 
+ENV APP_USER app
+ENV APP_HOME github.com/laithrafid/bookstore_items-api/src
+ARG SECRET=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
+RUN groupadd $APP_USER && useradd -m -g $APP_USER -l $APP_USER
+RUN mkdir -p $APP_HOME && chown -R $APP_USER:$APP_USER $APP_HOME
 
-ENV ELASTIC_HOSTS=localhost:9200
-ENV LOG_LEVEL=info
+WORKDIR $APP_HOME
+USER $APP_USER
+RUN git clone https://${SECRET}@github.com/laithrafid/bookstore_items-api.git --branch=main .
+RUN go mod download
+RUN go mod verify
+RUN go build -o itemsapi
 
-# Configure the repo url so we can configure our work directory:
-ENV REPO_URL=github.com/laithrafid/bookstore_items-api
+FROM alpine:3.15.0 as Production
 
-# Setup out $GOPATH
-ENV GOPATH=/app
+ENV APP_USER app
+ENV APP_HOME github.com/laithrafid/bookstore_items-api/src
 
-ENV APP_PATH=$GOPATH/src/$REPO_URL
+RUN groupadd $APP_USER && useradd -m -g $APP_USER -l $APP_USER
+RUN mkdir -p $APP_HOME
+WORKDIR $APP_HOME
 
-# /app/src/github.com/laithrafid/bookstore_items-api/src
+COPY --chown=0:0 --from=Builder $APP_HOME/itemsapi $APP_HOME/itemsapi
+COPY --chown=0:0 --from=Builder $APP_HOME/app.env $APP_HOME/app.env
 
-# Copy the entire source code from the current directory to $WORKPATH
-ENV WORKPATH=$APP_PATH/src
-COPY src $WORKPATH
-WORKDIR $WORKPATH
-
-RUN go build -o items-api .
-
-# Expose port 8081 to the world:
-EXPOSE 8081
-
-CMD ["./items-api"]
+EXPOSE 8080
+USER $APP_USER
+CMD ["./itemsapi"]
