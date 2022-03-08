@@ -30,7 +30,7 @@ func Init() {
 	if err != nil {
 		logger_utils.Error("cannot load config of application:", err)
 	}
-	log := logger_utils.Getlogger_utils()
+	log := logger_utils.Getlogger()
 
 	client, err := elastic.NewClient(
 		elastic.SetURL(config.ElasticHosts),
