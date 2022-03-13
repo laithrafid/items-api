@@ -1,79 +1,34 @@
-ARG BTYPE
-ARG BRANCH=main
-ARG REPO=bookstore_items-api
-
-FROM golang:1.17.6 as base
+FROM golang:1.17 AS builder
 LABEL bayt.cloud.image.authors="laith@bayt.cloud"
-ENV APP_USER app
-ENV APP_HOME github.com/laithrafid/bookstore_items-api/src
-RUN groupadd $APP_USER && useradd -m -g $APP_USER -l $APP_USER
-RUN mkdir -p $APP_HOME && chown -R $APP_USER:$APP_USER $APP_HOME
-WORKDIR $APP_HOME
-USER $APP_USER
+ARG github_id=laithrafid
+ENV github_id=$github_id
+ARG github_token
+ENV github_token=$github_token
 ARG API_ADDRESS=:8080
+ARG MYSQLDB_DRIVER=mysql
+ARG MYSQLDB_SOURCE=root:root@tcp(localhost:3306)/users_db?charset=utf8
+ENV MYSQLDB_DRIVER=$MYSQLDB_DRIVER
+ENV MYSQLDB_SOURCE=$MYSQLDB_SOURCE
 ENV OAUTH_API_ADDRESS=$API_ADDRESS
 ENV USERS_API_ADDRESS=$API_ADDRESS
 ENV ITEMS_API_ADDRESS=$API_ADDRESS
-ARG ELASTIC_HOSTS
+ARG ELASTIC_HOSTS="http://192.168.0.42:9200"
 ENV ELASTIC_HOSTS=$ELASTIC_HOSTS
-ENV GOPRIVATE="github.com/laithrafid"
-
-
-FROM base as builder-cibucket
-ARG bitbucket_id
-ENV bitbucket_id=$bitbucket_id
-ARG bitbucket_token
-ENV bitbucket_token=$bitbucket_token
-RUN  --mount=type=secret,id=credentials,required \
-    git config \
+WORKDIR /app
+USER $APP_USER
+ADD src .
+RUN git config \
   --global \
-  url."https://${bitbucket_id}:${bitbucket_token}@privatebitbucket.com".insteadOf \
-  "https://privatebitbucket.com"
-RUN --mount=type=secret,id=credentials,required \
-    git clone https://${bitbucket_id}:${bitbucket_token}@bitbucket.com
-
-FROM base as builder-cilab
-ARG gitlab_id
-ENV gitlab_id=$gitlab_id
-ARG gitlab_token
-ENV gitlab_token=$gitlab_token
-RUN  --mount=type=secret,id=credentials,required \
-   git config \
-  --global \
-  url."https://${gitlab_id}:${gitlab_token}@privategitlab.com".insteadOf \
-  "https://privategitlab.com"
-RUN --mount=type=secret,id=credentials,required \
-    git clone https://${gitlab_id}:${gitlab_token}@gitlab.com/${gitlab_id}/${REPO}.git --branch=${BRANCH} .
-
-FROM base as builder-cihub
-ARG GITHUBID=laithrafid
-ENV GITHUBID=$GITHUBID
-ARG GITHUB_TOKEN
-ENV GITHUB_TOKEN=$GITHUB_TOKEN
-RUN  --mount=type=secret,id=credentials,required \
-   git config \
-  --global \
-  url."https://${GITHUB_ID}:${GITHUB_TOKEN}@github.com".insteadOf \
+  url."https://${github_id}:${github_token}@github.com".insteadOf \
   "https://github.com"
-RUN --mount=type=secret,id=credentials,required \
- git clone https://${GITHUB_TOKEN}@github.com/${GITHUB_ID}/${REPO}.git --branch=${BRANCH} .
-
-
-FROM builder-${BTYPE} AS builder
+ENV GOPRIVATE="github.com/laithrafid"
 RUN go mod download
 RUN go mod verify
-RUN go build -o /itemsapi
+RUN go build -o /userapi
 
 
-FROM alpine:3.15.0 as production
-RUN apk --no-cache add curl shadow
-ENV APP_USER app
-ENV APP_HOME /itemsapi
-RUN groupadd $APP_USER && useradd -m -g $APP_USER -l $APP_USER
-WORKDIR $APP_HOME
-
-COPY --chown=$APP_USER:$APP_USER --from=builder /itemsapi .
-
-EXPOSE $ITEMS_API_ADDRESS
-USER $APP_USER:$APP_USER
-CMD ["./itemsapi"]
+FROM alpine:3.15.0 AS runner
+WORKDIR /
+COPY --from=builder /userapi /userapi
+EXPOSE $USERS_API_ADDRESS
+ENTRYPOINT ["/userapi"]
