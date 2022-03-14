@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/gorilla/mux v1.8.0
-	github.com/laithrafid/utils-go cd .0.0
+	github.com/laithrafid/utils-go v1.0.0
 	github.com/olivere/elastic v6.2.37+incompatible
 )
 
