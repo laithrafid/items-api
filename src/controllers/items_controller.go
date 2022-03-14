@@ -8,12 +8,12 @@ import (
 	"strings"
 
 	"github.com/gorilla/mux"
-	"github.com/laithrafid/bookstore_items-api/src/domain/items"
-	"github.com/laithrafid/bookstore_items-api/src/domain/queries"
-	"github.com/laithrafid/bookstore_items-api/src/services"
-	"github.com/laithrafid/bookstore_utils-go/errors_utils"
-	"github.com/laithrafid/bookstore_utils-go/http_utils"
-	"github.com/laithrafid/bookstore_utils-go/oauth_utils"
+	"github.com/laithrafid/items-api/src/domain/items"
+	"github.com/laithrafid/items-api/src/domain/queries"
+	"github.com/laithrafid/items-api/src/services"
+	"github.com/laithrafid/utils-go/errors_utils"
+	"github.com/laithrafid/utils-go/http_utils"
+	"github.com/laithrafid/utils-go/oauth_utils"
 )
 
 var (

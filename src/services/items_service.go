@@ -2,9 +2,9 @@ package services
 
 //2
 import (
-	"github.com/laithrafid/bookstore_items-api/src/domain/items"
-	"github.com/laithrafid/bookstore_items-api/src/domain/queries"
-	"github.com/laithrafid/bookstore_utils-go/errors_utils"
+	"github.com/laithrafid/items-api/src/domain/items"
+	"github.com/laithrafid/items-api/src/domain/queries"
+	"github.com/laithrafid/utils-go/errors_utils"
 )
 
 // 7

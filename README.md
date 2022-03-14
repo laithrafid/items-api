@@ -1,4 +1,4 @@
-![ItemsAPI-docker-Image](https://github.com/laithrafid/bookstore_items-api/actions/workflows/main.yml/badge.svg?branch=main)
+![ItemsAPI-docker-Image](https://github.com/laithrafid/items-api/actions/workflows/main.yml/badge.svg?branch=main)
 
 
 1. creating index postman request
